@@ -9,6 +9,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
+use common\models\Category;
 
 AppAsset::register($this);
 ?>
@@ -37,8 +38,18 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'Posts', 'url' => ['/post']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
     ];
+    $categories = Category::find()->select(['title', 'id'])->all();
+    $categoryMenu = [];
+
+    /** @var Category $category*/
+
+    foreach($categories as $category) {
+        $categoryMenu[] = ['label' => $category->title, 'url' => ['/category/view?id='.$category->id]];
+    }
+
+    $menuItems[] = ['label' => 'Categories', 'items' => $categoryMenu];
+
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
